@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/ro-pocket/build/static/css/main.8c8b27cf.chunk.css",
+    "main.js": "/ro-pocket/build/static/js/main.f92b017e.chunk.js",
+    "main.js.map": "/ro-pocket/build/static/js/main.f92b017e.chunk.js.map",
+    "runtime-main.js": "/ro-pocket/build/static/js/runtime-main.4188501b.js",
+    "runtime-main.js.map": "/ro-pocket/build/static/js/runtime-main.4188501b.js.map",
+    "static/js/2.7e2f6ab9.chunk.js": "/ro-pocket/build/static/js/2.7e2f6ab9.chunk.js",
+    "static/js/2.7e2f6ab9.chunk.js.map": "/ro-pocket/build/static/js/2.7e2f6ab9.chunk.js.map",
+    "static/js/3.25048bbe.chunk.js": "/ro-pocket/build/static/js/3.25048bbe.chunk.js",
+    "static/js/3.25048bbe.chunk.js.map": "/ro-pocket/build/static/js/3.25048bbe.chunk.js.map",
+    "index.html": "/ro-pocket/build/index.html",
+    "static/css/main.8c8b27cf.chunk.css.map": "/ro-pocket/build/static/css/main.8c8b27cf.chunk.css.map",
+    "static/js/2.7e2f6ab9.chunk.js.LICENSE.txt": "/ro-pocket/build/static/js/2.7e2f6ab9.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/ro-pocket/build/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4188501b.js",
+    "static/js/2.7e2f6ab9.chunk.js",
+    "static/css/main.8c8b27cf.chunk.css",
+    "static/js/main.f92b017e.chunk.js"
+  ]
+}
