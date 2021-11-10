@@ -2,6 +2,7 @@
   "name": "ro-pocket",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://localhost/ro-pocket/build",
   "dependencies": {
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
