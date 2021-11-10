@@ -4,7 +4,7 @@ import { Room } from './Room';
 function App() {
 	return (
 		<div className="App">
-			<Room name={'Foo'} />
+			<Room roomId={'67362271'} name={'Foo'} />
 		</div>
 	);
 }

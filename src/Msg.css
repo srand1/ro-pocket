@@ -1,0 +1,11 @@
+.avatar {
+	width: 2em;
+	height: 2em;
+}
+.avatar-overlay {
+	width: 2em;
+	height: 2em;
+}
+.deleted {
+	background-color: gray;
+}
