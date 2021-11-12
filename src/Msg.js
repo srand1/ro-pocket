@@ -33,11 +33,26 @@ export const Msg = props => {
 	if (adminServer && custom.messageType === 'PRESENT_NORMAL') {
 		return <Ignore tag={'adminServer PRESENT_NORMAL'} />;
 	}
+	if (adminServer && custom.messageType === 'PRESENT_FULLSCREEN') {
+		return <Ignore tag={'adminServer PRESENT_FULLSCREEN'} />;
+	}
+	if (adminServer && custom.messageType === 'RECIEVE_GIFT_EVENT') {
+		return <Ignore tag={'adminServer RECIEVE_GIFT_EVENT'} />;
+	}
 	if (adminServer && custom.messageType === 'DELETE') {
 		return <Ignore tag={'adminServer DELETE'} />;
 	}
 	if (custom.messageType === 'PRESENT_TEXT') {
 		return <PresentText msg={props.msg} custom={custom} />;
+	}
+	if (custom.messageType === 'EXPRESSIMAGE') {
+		return <ExpressImage msg={props.msg} custom={custom} />;
+	}
+	if (custom.messageType === 'REPLY') {
+		return <Reply msg={props.msg} custom={custom} />;
+	}
+	if (props.msg.type === 'image') {
+		return <Image msg={props.msg} custom={custom} />;
 	}
 	return <div>{JSON.stringify(props.msg)}</div>;
 };
@@ -52,7 +67,29 @@ const Text = props => {
 const PresentText = props => {
 	return (
 		<Template user={props.custom.user} deleted={props.deleted}>
-			{props.custom.giftInfo?.giftName}
+			Sent {props.custom.giftInfo?.giftNum}x {props.custom.giftInfo?.giftName}
+		</Template>
+	);
+};
+const ExpressImage = props => {
+	return (
+		<Template user={props.custom.user} deleted={props.deleted}>
+			<img src={props.custom.emotionRemote} alt="" />
+		</Template>
+	);
+};
+const Reply = props => {
+	return (
+		<Template user={props.custom.user} deleted={props.deleted}>
+			{props.custom.text}
+			<blockquote>{props.custom.replyName}: {props.custom.replyText}</blockquote>
+		</Template>
+	);
+};
+const Image = props => {
+	return (
+		<Template user={props.custom.user} deleted={props.deleted}>
+			<img src={props.msg.file.url} alt="" />
 		</Template>
 	);
 };
