@@ -41,6 +41,7 @@ export const Room = props => {
 	const ondisconnect = (...args) => { console.log('d', args); };
 	const onerror = (...args) => { console.log('e', args); };
 	const onmsgs = msgs => {
+		msgs.forEach(msg => {msg.custom = JSON.parse(msg.custom || null);});
 		setMsgs(msgsPrev => [...msgsPrev, ...msgs]);
 		console.log(msgs);
 	};
@@ -53,14 +54,15 @@ export const Room = props => {
 					return;
 				}
 				obj.msgs.reverse();
+				obj.msgs.forEach(msg => {msg.custom = JSON.parse(msg.custom || null);});
 				setMsgs(msgsPrev => [...obj.msgs, ...msgsPrev]);
 			},
 		});
 	};
 
 	const deleted = new Set(msgsView.filter(
-		msg => JSON.parse(msg.custom || null)?.messageType === 'DELETE'
-	).map(msg => JSON.parse(msg.custom).targetId));
+		msg => msg.custom?.messageType === 'DELETE'
+	).map(msg => msg.custom.targetId));
 
 	return (
 		<div>
@@ -71,7 +73,9 @@ export const Room = props => {
 			<button onClick={earlier}>Earlier</button>
 			<div>
 				{msgsView.map(msg => (
-					<Msg key={msg.idClient} msg={msg} deleted={deleted.has(msg.idClient)}/>
+					<div key={msg.idClient} className="each" onClick={() => console.log(msg)}>
+						<Msg msg={msg} deleted={deleted.has(msg.idClient)}/>
+					</div>
 				))}
 			</div>
 		</div>

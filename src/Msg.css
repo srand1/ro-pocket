@@ -1,3 +1,7 @@
+.each {
+	margin: 1em 0;
+}
+
 .avatar {
 	width: 2em;
 	height: 2em;
