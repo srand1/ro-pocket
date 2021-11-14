@@ -41,9 +41,34 @@ export const Room = props => {
 	const ondisconnect = (...args) => { console.log('d', args); };
 	const onerror = (...args) => { console.log('e', args); };
 	const onmsgs = msgs => {
-		msgs.forEach(msg => {msg.custom = JSON.parse(msg.custom || null);});
-		setMsgs(msgsPrev => [...msgsPrev, ...msgs]);
+		setMsgs(msgsPrev => {
+			const msgsSanitized = sanitizeDelta(msgs, msgsPrev, 'dupNew');
+			return [...msgsPrev, ...msgsSanitized];
+		});
 		console.log(msgs);
+	};
+	const sanitizeDelta = (msgs, msgsPrev, tag) => {
+		const msgsNoResend = msgs.filter(msg => !msg.resend);
+		const msgsParsed = msgsNoResend.map(msg => ({
+			...msg,
+			custom: JSON.parse(msg.custom || null),
+		}));
+		// Mostly unnecessary after `resend` check.
+		// But consecutive button clicks can send dup requests.
+		const byKey = new Map(msgsPrev.map((msg, idx) => [msg.idClient, idx]));
+		const lookup = msgsParsed.map((msg, idx) => [idx, msg, byKey.get(msg.idClient)]);
+		const dups = lookup.filter(
+			([idx, msg, idxEx]) => idxEx !== undefined
+		).map(
+			([idx, msg, idxEx]) => [idx, msg, idxEx, msgsPrev[idxEx]]
+		);
+		if (dups.length > 0) console.log(tag, dups);
+		const msgsNoDup = lookup.filter(
+			([idx, msg, idxEx]) => idxEx === undefined
+		).map(
+			([idx, msg, idxEx]) => msg
+		);
+		return msgsNoDup;
 	};
 	const earlier = () => {
 		chatroom.getHistoryMsgs({
@@ -53,9 +78,12 @@ export const Room = props => {
 					console.log(err);
 					return;
 				}
-				obj.msgs.reverse();
-				obj.msgs.forEach(msg => {msg.custom = JSON.parse(msg.custom || null);});
-				setMsgs(msgsPrev => [...obj.msgs, ...msgsPrev]);
+				const msgs = [...obj.msgs];
+				msgs.reverse();
+				setMsgs(msgsPrev => {
+					const msgsSanitized = sanitizeDelta(msgs, msgsPrev, 'dupHist');
+					return [...msgsSanitized, ...msgsPrev];
+				});
 			},
 		});
 	};
