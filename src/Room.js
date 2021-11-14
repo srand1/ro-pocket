@@ -41,9 +41,40 @@ export const Room = props => {
 	const ondisconnect = (...args) => { console.log('d', args); };
 	const onerror = (...args) => { console.log('e', args); };
 	const onmsgs = msgs => {
-		msgs.forEach(msg => {msg.custom = JSON.parse(msg.custom || null);});
-		setMsgs(msgsPrev => [...msgsPrev, ...msgs]);
+		setMsgs(msgsPrev => {
+			msgs = sanitizeDelta(msgs, msgsPrev, 'dupNew');
+			return [...msgsPrev, ...msgs];
+		});
 		console.log(msgs);
+	};
+	const sanitizeDelta = (msgs, msgsPrev, tag) => {
+		// debugger;
+		msgs = msgs.filter(msg => !msg.resend);
+		msgs.forEach((msg, idx) => {
+			// try {
+				// if (msg.custom && typeof msg.custom !== 'string') debugger;
+				msg.custom = JSON.parse(msg.custom || null);
+			// } catch (e) {
+			// 	console.log('catch', e, msg);
+			// }
+		});
+		// Mostly unnecessary after `resend` check.
+		// But consecutive button clicks can send dup requests.
+		const byKey = new Map(msgsPrev.map((msg, idx) => [msg.idClient, idx]));
+		// console.log('sanitize', byKey, msgs);
+		const lookup = msgs.map((msg, idx) => [idx, msg, byKey.get(msg.idClient)]);
+		const dups = lookup.filter(
+			([idx, msg, idxEx]) => idxEx !== undefined
+		).map(
+			([idx, msg, idxEx]) => [idx, msg, idxEx, msgsPrev[idxEx]]
+		);
+		if (dups.length > 0) console.log(tag, dups);
+		msgs = lookup.filter(
+			([idx, msg, idxEx]) => idxEx === undefined
+		).map(
+			([idx, msg, idxEx]) => msg
+		);
+		return msgs;
 	};
 	const earlier = () => {
 		chatroom.getHistoryMsgs({
@@ -54,8 +85,16 @@ export const Room = props => {
 					return;
 				}
 				obj.msgs.reverse();
-				obj.msgs.forEach(msg => {msg.custom = JSON.parse(msg.custom || null);});
-				setMsgs(msgsPrev => [...obj.msgs, ...msgsPrev]);
+				console.log('debug-done');
+				const doneTime = new Date();
+				setMsgs(msgsPrev => {
+					obj.debug = (obj.debug || 0) + 1;
+					// console.log('debug-setMsgs', doneTime, obj, msgsView);
+					console.trace('debug-setMsgs', doneTime, obj, msgsView, console.log);
+					// debugger;
+					obj.msgs = sanitizeDelta(obj.msgs, msgsPrev, 'dupHist');
+					return [...obj.msgs, ...msgsPrev];
+				});
 			},
 		});
 	};
