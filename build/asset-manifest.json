@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/ro-pocket/build/static/css/main.c4442756.chunk.css",
-    "main.js": "/ro-pocket/build/static/js/main.d2a76144.chunk.js",
-    "main.js.map": "/ro-pocket/build/static/js/main.d2a76144.chunk.js.map",
+    "main.css": "/ro-pocket/build/static/css/main.dfc4c993.chunk.css",
+    "main.js": "/ro-pocket/build/static/js/main.bd3c14e9.chunk.js",
+    "main.js.map": "/ro-pocket/build/static/js/main.bd3c14e9.chunk.js.map",
     "runtime-main.js": "/ro-pocket/build/static/js/runtime-main.1cf00c61.js",
     "runtime-main.js.map": "/ro-pocket/build/static/js/runtime-main.1cf00c61.js.map",
-    "static/js/2.a4abd3f4.chunk.js": "/ro-pocket/build/static/js/2.a4abd3f4.chunk.js",
-    "static/js/2.a4abd3f4.chunk.js.map": "/ro-pocket/build/static/js/2.a4abd3f4.chunk.js.map",
+    "static/js/2.ec9fedd7.chunk.js": "/ro-pocket/build/static/js/2.ec9fedd7.chunk.js",
+    "static/js/2.ec9fedd7.chunk.js.map": "/ro-pocket/build/static/js/2.ec9fedd7.chunk.js.map",
     "static/js/3.78b4e0e1.chunk.js": "/ro-pocket/build/static/js/3.78b4e0e1.chunk.js",
     "static/js/3.78b4e0e1.chunk.js.map": "/ro-pocket/build/static/js/3.78b4e0e1.chunk.js.map",
     "index.html": "/ro-pocket/build/index.html",
-    "static/css/main.c4442756.chunk.css.map": "/ro-pocket/build/static/css/main.c4442756.chunk.css.map",
-    "static/js/2.a4abd3f4.chunk.js.LICENSE.txt": "/ro-pocket/build/static/js/2.a4abd3f4.chunk.js.LICENSE.txt"
+    "static/css/main.dfc4c993.chunk.css.map": "/ro-pocket/build/static/css/main.dfc4c993.chunk.css.map",
+    "static/js/2.ec9fedd7.chunk.js.LICENSE.txt": "/ro-pocket/build/static/js/2.ec9fedd7.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.1cf00c61.js",
-    "static/js/2.a4abd3f4.chunk.js",
-    "static/css/main.c4442756.chunk.css",
-    "static/js/main.d2a76144.chunk.js"
+    "static/js/2.ec9fedd7.chunk.js",
+    "static/css/main.dfc4c993.chunk.css",
+    "static/js/main.bd3c14e9.chunk.js"
   ]
 }
