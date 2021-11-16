@@ -3,8 +3,8 @@ import './Msg.css';
 const base = 'https://source.48.cn/';
 const baseM = 'https://mp4.48.cn/';
 
-const Unknown = props => <div>Unknown {props.tag}: {JSON.stringify(props.msg)}</div>;
-const Ignore = props => <div>(Ignored {props.tag})</div>
+const Unknown = props => props.toggles.get('unknown') ? <div>Unknown {props.tag}: {JSON.stringify(props.msg)}</div> : null;
+const Ignore = props => props.toggles.get('ignore') ? <div>(Ignored {props.tag})</div> : null;
 
 const Template = props => (
 	<div className={props.deleted?'deleted':''}>
@@ -19,26 +19,30 @@ const Template = props => (
 
 export const Msg = props => {
 	const custom = props.msg.custom;
+
+	if (!props.toggles.get('showAll') && parseInt(custom.sessionRole) === 0) return null;
+	if (props.toggles.get(custom.messageType) === false) return null;
+
 	if (custom.messageType === 'TEXT') {
 		return <Text msg={props.msg} custom={custom} deleted={props.deleted} />;
 	}
 	if (custom.messageType === 'DELETE') {
-		return <Ignore tag={'adminServer DELETE'} />;
+		return <Ignore tag={'adminServer DELETE'} toggles={props.toggles} />;
 	}
 	if (custom.messageType === 'DISABLE_SPEAK') {
-		return <Ignore tag={'adminServer DISABLE_SPEAK'} />;
+		return <Ignore tag={'adminServer DISABLE_SPEAK'} toggles={props.toggles} />;
 	}
 	if (custom.messageType === 'PRESENT_NORMAL') {
-		return <Ignore tag={'adminServer PRESENT_NORMAL'} />;
+		return <Ignore tag={'adminServer PRESENT_NORMAL'} toggles={props.toggles} />;
 	}
 	if (custom.messageType === 'PRESENT_FULLSCREEN') {
-		return <Ignore tag={'adminServer PRESENT_FULLSCREEN'} />;
+		return <Ignore tag={'adminServer PRESENT_FULLSCREEN'} toggles={props.toggles} />;
 	}
 	if (custom.messageType === 'RECIEVE_GIFT_EVENT') {
-		return <Ignore tag={'adminServer RECIEVE_GIFT_EVENT'} />;
+		return <Ignore tag={'adminServer RECIEVE_GIFT_EVENT'} toggles={props.toggles} />;
 	}
 	if (custom.messageType === 'SEND_GIFT_EVENT') {
-		return <Ignore tag={'adminServer SEND_GIFT_EVENT'} />;
+		return <Ignore tag={'adminServer SEND_GIFT_EVENT'} toggles={props.toggles} />;
 	}
 	if (custom.messageType === 'PRESENT_TEXT') {
 		return <PresentText msg={props.msg} custom={custom} />;
@@ -70,7 +74,7 @@ export const Msg = props => {
 	// GIFTREPLY FLIPCARD_VIDEO EXPRESS VOTE CLOSE_ROOM_CHAT
 	// SESSION_DIANTAI OPEN_LIVE TRIP_INFO
 	// ZHONGQIU_ACTIVITY_LANTERN_FANS
-	return <Unknown tag={'messageType'} msg={props.msg} />;
+	return <Unknown tag={'messageType'} msg={props.msg} toggles={props.toggles} />;
 };
 
 const Text = props => {
