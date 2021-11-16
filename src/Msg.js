@@ -7,7 +7,9 @@ const Template = props => (
 	<div className={props.deleted?'deleted':''}>
 		<img className="avatar" src={`https://source.48.cn${props.user?.avatar}`} alt="" />
 		{(props.user?.pfUrl)?(<img className="avatar-overlay" src={`https://source.48.cn${props.user?.pfUrl}`} alt="" />):null}
-		{props.user?.nickName}<br />
+		{props.user?.nickName}
+		{(new Date(props.msg.time)).toLocaleString()}
+		<br />
 		{props.children}
 	</div>
 );
@@ -59,28 +61,28 @@ export const Msg = props => {
 
 const Text = props => {
 	return (
-		<Template user={props.custom.user} deleted={props.deleted}>
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			{props.custom.text}
 		</Template>
 	);
 };
 const PresentText = props => {
 	return (
-		<Template user={props.custom.user} deleted={props.deleted}>
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			Sent {props.custom.giftInfo?.giftNum}x {props.custom.giftInfo?.giftName}
 		</Template>
 	);
 };
 const ExpressImage = props => {
 	return (
-		<Template user={props.custom.user} deleted={props.deleted}>
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			<img src={props.custom.emotionRemote} alt="" />
 		</Template>
 	);
 };
 const Reply = props => {
 	return (
-		<Template user={props.custom.user} deleted={props.deleted}>
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			{props.custom.text}
 			<blockquote>{props.custom.replyName}: {props.custom.replyText}</blockquote>
 		</Template>
@@ -88,7 +90,7 @@ const Reply = props => {
 };
 const Image = props => {
 	return (
-		<Template user={props.custom.user} deleted={props.deleted}>
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			<img src={props.msg.file.url} alt="" />
 		</Template>
 	);

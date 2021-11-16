@@ -87,6 +87,24 @@ export const Room = props => {
 			},
 		});
 	};
+	const fileSelected = async evt => {
+		const file = evt.target.files[0];
+		if (!file) { console.log('no file', evt.target.files); return; }
+		console.log('loading', new Date());
+		const text = await file.text();
+		let json;
+		try {
+			json = JSON.parse(text);
+		} catch (e) {
+			console.log('err parse', e);
+			return;
+		}
+		console.log('loaded', new Date());
+		json.reverse();
+		let msgsSanitized = sanitizeDelta(json, [], 'dupLoad');
+		console.log('rendering', new Date());
+		setMsgs(msgsSanitized);
+	};
 
 	const deleted = new Set(msgsView.filter(
 		msg => msg.custom?.messageType === 'DELETE'
@@ -95,6 +113,7 @@ export const Room = props => {
 	return (
 		<div>
 			<header>{props.name}</header>
+			<input type="file" onChange={fileSelected} />
 			<button onClick={debug}>Debug</button>
 			{stageView}
 			<button onClick={init}>Init</button>
