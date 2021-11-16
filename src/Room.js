@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Msg } from './Msg';
+import { Selector } from './Selector';
 
 const appKey = '632feff1f4c838541ab75195d1ceb3fa';
 const chatroomAddresses = ['chatweblink01.netease.im:443'];
@@ -8,6 +9,7 @@ export const Room = props => {
 	const [chatroom, setChatroom] = useState(null);
 	const [stageView, setStage] = useState('OFFLINE');
 	const [msgsView, setMsgs] = useState([]);
+	const [roomId, setRoomId] = useState(() => props.roomId);
 
 	const debug = () => {
 		console.log(window.SDK);
@@ -23,7 +25,7 @@ export const Room = props => {
 			chatroomNick: 'RO',
 			// account: account,
 			// token: account,
-			chatroomId: props.roomId,
+			chatroomId: roomId,
 			chatroomAddresses,
 			onconnect,
 			onwillreconnect,
@@ -112,7 +114,10 @@ export const Room = props => {
 
 	return (
 		<div>
-			<header>{props.name}</header>
+			<header>
+				<Selector onChange={setRoomId} />
+				{roomId}
+			</header>
 			<input type="file" onChange={fileSelected} />
 			<button onClick={debug}>Debug</button>
 			{stageView}
