@@ -7,9 +7,9 @@ const chatroomAddresses = ['chatweblink01.netease.im:443'];
 
 const toggleDescs = [
 	{key: 'showAll', desc: '\u805A\u805A', init: false},
-	{key: 'TEXT', desc: '\u6587\u5B57', init: true},
 	{key: 'PRESENT_TEXT', desc: '\u793C\u7269', init: true},
 	{key: 'EXPRESSIMAGE', desc: '\u8868\u60C5', init: true},
+	{key: 'TEXT', desc: '\u6587\u5B57', init: true},
 	{key: 'REPLY', desc: '\u56DE\u590D', init: true},
 	{key: 'FLIPCARD', desc: '\u6587\u5B57\u7FFB\u724C', init: true},
 	{key: 'FLIPCARD_AUDIO', desc: '\u8BED\u97F3\u7FFB\u724C', init: true},
@@ -54,10 +54,13 @@ export const Room = props => {
 	};
 	const onconnect = chatroomInfo => {
 		setStage('ONLINE');
-		console.log('ONLINE', chatroomInfo);
+		console.log('onconnect', chatroomInfo);
 	};
 	const onwillreconnect = (...args) => { console.log('r', args); };
-	const ondisconnect = (...args) => { console.log('d', args); };
+	const ondisconnect = err => {
+		setStage('OFFLINE');
+		console.log('ondisconnect', err);
+	};
 	const onerror = (...args) => { console.log('e', args); };
 	const onmsgs = msgs => {
 		setMsgs(msgsPrev => {
@@ -131,13 +134,13 @@ export const Room = props => {
 
 	return (
 		<div>
+			<button onClick={debug}>Debug</button>
+			<input type="file" onChange={fileSelected} />
 			<header>
 				<Selector onChange={setRoomId} />
 				{roomId}
 			</header>
-			<input type="file" onChange={fileSelected} />
-			<button onClick={debug}>Debug</button>
-			{stageView}
+			{stageView} | {chatroom?.protocol?.hasLogin?.toString()}
 			<button onClick={init}>Init</button>
 			<button onClick={earlier}>Earlier</button>
 			<div>
