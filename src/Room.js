@@ -133,23 +133,25 @@ export const Room = props => {
 	).map(msg => msg.custom.targetId));
 
 	return (
-		<div>
-			<button onClick={debug}>Debug</button>
-			<input type="file" onChange={fileSelected} />
+		<div className="Room">
 			<header>
+				<button onClick={debug}>Debug</button>
+				<input type="file" onChange={fileSelected} />
+				<br />
 				<Selector onChange={setRoomId} />
 				{roomId}
+				<br />
+				{stageView} | {chatroom?.protocol?.hasLogin?.toString()}
+				<button onClick={init}>Init</button>
+				<button onClick={earlier}>Earlier</button>
+				<div>
+					{toggleDescs.map(({key, desc}) => <Fragment key={key}>
+						<input type="checkbox" id={`toggle-${key}`} checked={toggles.get(key)} onChange={evt => setToggles(togglesPrev => (new Map(togglesPrev)).set(key, evt.target.checked))} />
+						<label htmlFor={`toggle-${key}`}>{desc}</label>
+					</Fragment>)}
+				</div>
 			</header>
-			{stageView} | {chatroom?.protocol?.hasLogin?.toString()}
-			<button onClick={init}>Init</button>
-			<button onClick={earlier}>Earlier</button>
-			<div>
-			{toggleDescs.map(({key, desc}) => <Fragment key={key}>
-				<input type="checkbox" id={`toggle-${key}`} checked={toggles.get(key)} onChange={evt => setToggles(togglesPrev => (new Map(togglesPrev)).set(key, evt.target.checked))} />
-				<label htmlFor={`toggle-${key}`}>{desc}</label>
-			</Fragment>)}
-			</div>
-			<div>
+			<div className="Msgs">
 				{msgsView.map(msg => (
 					<div key={msg.idClient} className="each" onClick={() => console.log(msg)}>
 						<Msg msg={msg} deleted={deleted.has(msg.idClient)} toggles={toggles} />

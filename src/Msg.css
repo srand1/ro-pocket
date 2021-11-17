@@ -1,3 +1,12 @@
+.Room {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+.Msgs {
+	flex-grow: 1;
+	overflow-y: scroll;
+}
 .each {
 	margin: 1em 0;
 }
