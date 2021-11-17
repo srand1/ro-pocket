@@ -21,6 +21,10 @@ const toggleDescs = [
 	{key: 'unknown', desc: '\u672A\u77E5', init: true},
 ];
 
+const _p = (chatroom, method, opts) => new Promise((resolve, reject) => chatroom[method]({
+	...opts, done: (err, obj) => err ? reject(err) : resolve(obj),
+}));
+
 export const Room = props => {
 	const [chatroom, setChatroom] = useState(null);
 	const [stageView, setStage] = useState('OFFLINE');
@@ -36,7 +40,8 @@ export const Room = props => {
 	};
 
 	const init = () => {
-		const chatroomNew = window.SDK.Chatroom.getInstance({
+		const box = {};
+		box.chatroomNew = window.SDK.Chatroom.getInstance({
 			appKey,
 			isAnonymous: true,
 			chatroomNick: 'RO',
@@ -44,17 +49,38 @@ export const Room = props => {
 			// token: account,
 			chatroomId: roomId,
 			chatroomAddresses,
-			onconnect,
+			onconnect: onconnectX(box),
 			onwillreconnect,
 			ondisconnect,
 			onerror,
 			onmsgs,
 		});
-		setChatroom(chatroomNew);
+		console.log('x0', box);
+		setChatroom(box.chatroomNew);
 	};
-	const onconnect = chatroomInfo => {
+	const onconnectX = box => chatroomInfo => {
 		setStage('ONLINE');
 		console.log('onconnect', chatroomInfo);
+		console.log('onconnectX', box);
+		(async () => {
+			let cnt = 0;
+			let timetag = msgsView[0]?.time;  // = undefined
+			while (true) {
+				console.log('auto', timetag);
+				const obj = await _p(box.chatroomNew, 'getHistoryMsgs', {timetag});
+				if (++cnt >= 30) break;
+				if (obj.msgs.length === 0) break;
+				const msgs = [...obj.msgs];
+				msgs.reverse();
+				setMsgs(msgsPrev => {
+					const msgsSanitized = sanitizeDelta(msgs, msgsPrev, 'dupAudo');
+					return [...msgsSanitized, ...msgsPrev];
+				});
+				timetag = msgs[0].time;
+				const dt = new Date(timetag);
+				if (new Date() - dt >= 86400e3) break;
+			}
+		})();
 	};
 	const onwillreconnect = (...args) => { console.log('r', args); };
 	const ondisconnect = err => {
@@ -144,6 +170,8 @@ export const Room = props => {
 				{stageView} | {chatroom?.protocol?.hasLogin?.toString()}
 				<button onClick={init}>Init</button>
 				<button onClick={earlier}>Earlier</button>
+				<br />
+				{msgsView.length} msgs since {msgsView.length>0?(new Date(msgsView[0].time)).toLocaleString():null}
 				<div>
 					{toggleDescs.map(({key, desc}) => <Fragment key={key}>
 						<input type="checkbox" id={`toggle-${key}`} checked={toggles.get(key)} onChange={evt => setToggles(togglesPrev => (new Map(togglesPrev)).set(key, evt.target.checked))} />
