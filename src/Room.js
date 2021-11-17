@@ -168,8 +168,8 @@ export const Room = props => {
 				{roomId}
 				<br />
 				{stageView} | {chatroom?.protocol?.hasLogin?.toString()}
-				<button onClick={init}>Init</button>
-				<button onClick={earlier}>Earlier</button>
+				<button onClick={init} disabled={stageView === 'ONLINE'}>Init</button>
+				<button onClick={earlier} disabled={!chatroom?.protocol?.hasLogin}>Earlier</button>
 				<br />
 				{msgsView.length} msgs since {msgsView.length>0?(new Date(msgsView[0].time)).toLocaleString():null}
 				<div>
