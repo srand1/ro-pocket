@@ -31,6 +31,11 @@ export const Room = props => {
 	const [msgsView, setMsgs] = useState([]);
 	const [roomId, setRoomId] = useState(() => props.roomId);
 	const [toggles, setToggles] = useState(() => new Map(toggleDescs.map(({key, init}) => [key, init])));
+	const [scrollPct, setScrollPct] = useState(0);
+	const [start, setStart] = useState(0);
+
+	const startFixed = (start < 0)? 0 : ((start > msgsView.length - 200) ? msgsView.length - 200: start);
+	const msgsShow = msgsView.slice(startFixed, startFixed+200);
 
 	const debug = () => {
 		console.log(window.SDK);
@@ -153,6 +158,16 @@ export const Room = props => {
 		console.log('rendering', new Date());
 		setMsgs(msgsSanitized);
 	};
+	const onScroll = evt => {
+		const pct = evt.target.scrollTop / (evt.target.scrollHeight - evt.target.clientHeight);
+		setScrollPct(pct);
+		if (pct >= 1 - 1e-3) {
+			setStart(startPrev => startPrev+50);
+		} else if (pct < 1e-3) {
+			setStart(startPrev => startPrev-50);
+		} else {
+		}
+	};
 
 	const deleted = new Set(msgsView.filter(
 		msg => msg.custom?.messageType === 'DELETE'
@@ -171,6 +186,7 @@ export const Room = props => {
 				<button onClick={init} disabled={stageView === 'ONLINE'}>Init</button>
 				<button onClick={earlier} disabled={!chatroom?.protocol?.hasLogin}>Earlier</button>
 				<br />
+				{Math.floor(scrollPct*100, 2)}% [{start}] @
 				{msgsView.length} msgs since {msgsView.length>0?(new Date(msgsView[0].time)).toLocaleString():null}
 				<div>
 					{toggleDescs.map(({key, desc}) => <Fragment key={key}>
@@ -179,8 +195,8 @@ export const Room = props => {
 					</Fragment>)}
 				</div>
 			</header>
-			<div className="Msgs">
-				{msgsView.map(msg => (
+			<div className="Msgs" onScroll={onScroll}>
+				{msgsShow.map(msg => (
 					<div key={msg.idClient} className="each" onClick={() => console.log(msg)}>
 						<Msg msg={msg} deleted={deleted.has(msg.idClient)} toggles={toggles} />
 					</div>
