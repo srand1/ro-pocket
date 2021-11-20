@@ -33,9 +33,10 @@ export const Room = props => {
 	const [toggles, setToggles] = useState(() => new Map(toggleDescs.map(({key, init}) => [key, init])));
 	const [scrollPct, setScrollPct] = useState(0);
 	const [start, setStart] = useState(0);
+	const [viewFirstId, setViewFirstId] = useState(null);
 
 	const startFixed = (start < 0)? 0 : ((start > msgsView.length - 200) ? msgsView.length - 200: start);
-	const msgsShow = msgsView.slice(startFixed, startFixed+200);
+	const msgsShow = false ? msgsView.slice(startFixed, startFixed+200) : msgsView.slice();
 
 	const debug = () => {
 		console.log(window.SDK);
@@ -160,6 +161,14 @@ export const Room = props => {
 	};
 	const onScroll = evt => {
 		const pct = evt.target.scrollTop / (evt.target.scrollHeight - evt.target.clientHeight);
+		[...evt.target.children].reduce((done, child) => {
+			if (done) return done;
+			if (child.offsetTop - child.parentElement.offsetTop >= child.parentElement.scrollTop) {
+				setViewFirstId(child.id);
+				return true;
+			}
+			return false;
+		}, false);
 		setScrollPct(pct);
 		if (pct >= 1 - 1e-3) {
 			setStart(startPrev => startPrev+50);
@@ -186,7 +195,7 @@ export const Room = props => {
 				<button onClick={init} disabled={stageView === 'ONLINE'}>Init</button>
 				<button onClick={earlier} disabled={!chatroom?.protocol?.hasLogin}>Earlier</button>
 				<br />
-				{Math.floor(scrollPct*100, 2)}% [{start}] @
+				{Math.floor(scrollPct*100, 2)}% [{start}] [{viewFirstId}] @
 				{msgsView.length} msgs since {msgsView.length>0?(new Date(msgsView[0].time)).toLocaleString():null}
 				<div>
 					{toggleDescs.map(({key, desc}) => <Fragment key={key}>
@@ -197,7 +206,7 @@ export const Room = props => {
 			</header>
 			<div className="Msgs" onScroll={onScroll}>
 				{msgsShow.map(msg => (
-					<div key={msg.idClient} className="each" onClick={() => console.log(msg)}>
+					<div key={msg.idClient} id={msg.idClient} className={'each' + ((msg.idClient === viewFirstId) ? ' first' : '')} onClick={() => console.log(msg)}>
 						<Msg msg={msg} deleted={deleted.has(msg.idClient)} toggles={toggles} />
 					</div>
 				))}

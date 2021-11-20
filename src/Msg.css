@@ -8,7 +8,10 @@
 	overflow-y: scroll;
 }
 .each {
-	margin: 1em 0;
+	padding: 0.5em 0;
+}
+.first {
+	background-color: green;
 }
 
 .avatar {
