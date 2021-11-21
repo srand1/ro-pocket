@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useRef, useState, Fragment } from 'react';
 import { Msg } from './Msg';
 import { Selector } from './Selector';
 
@@ -26,7 +26,7 @@ const _p = (chatroom, method, opts) => new Promise((resolve, reject) => chatroom
 }));
 
 export const Room = props => {
-	const [chatroom, setChatroom] = useState(null);
+	const chatroomRef = useRef(null);
 	const [stageView, setStage] = useState('OFFLINE');
 	const [msgsView, setMsgs] = useState([]);
 	const [roomId, setRoomId] = useState(() => props.roomId);
@@ -34,14 +34,13 @@ export const Room = props => {
 
 	const debug = () => {
 		console.log(window.SDK);
-		console.log(chatroom);
+		console.log(chatroomRef.current);
 		console.log(msgsView);
 		console.log(deleted);
 	};
 
 	const init = () => {
-		const box = {};
-		box.chatroomNew = window.SDK.Chatroom.getInstance({
+		const chatroomNew = window.SDK.Chatroom.getInstance({
 			appKey,
 			isAnonymous: true,
 			chatroomNick: 'RO',
@@ -49,25 +48,23 @@ export const Room = props => {
 			// token: account,
 			chatroomId: roomId,
 			chatroomAddresses,
-			onconnect: onconnectX(box),
+			onconnect,
 			onwillreconnect,
 			ondisconnect,
 			onerror,
 			onmsgs,
 		});
-		console.log('x0', box);
-		setChatroom(box.chatroomNew);
+		chatroomRef.current = chatroomNew;
 	};
-	const onconnectX = box => chatroomInfo => {
+	const onconnect = chatroomInfo => {
 		setStage('ONLINE');
-		console.log('onconnect', chatroomInfo);
-		console.log('onconnectX', box);
+		console.log('onconnect', chatroomInfo, chatroomRef.current);
 		(async () => {
 			let cnt = 0;
 			let timetag = msgsView[0]?.time;  // = undefined
 			while (true) {
 				console.log('auto', timetag);
-				const obj = await _p(box.chatroomNew, 'getHistoryMsgs', {timetag});
+				const obj = await _p(chatroomRef.current, 'getHistoryMsgs', {timetag});
 				if (++cnt >= 30) break;
 				if (obj.msgs.length === 0) break;
 				const msgs = [...obj.msgs];
@@ -119,7 +116,7 @@ export const Room = props => {
 		return msgsNoDup;
 	};
 	const earlier = () => {
-		chatroom.getHistoryMsgs({
+		chatroomRef.current.getHistoryMsgs({
 			timetag: msgsView[0]?.time,
 			done: (err, obj) => {
 				if (err) {
@@ -167,9 +164,9 @@ export const Room = props => {
 				<Selector onChange={setRoomId} />
 				{roomId}
 				<br />
-				{stageView} | {chatroom?.protocol?.hasLogin?.toString()}
+				{stageView} | {chatroomRef.current?.protocol?.hasLogin?.toString()}
 				<button onClick={init} disabled={stageView === 'ONLINE'}>Init</button>
-				<button onClick={earlier} disabled={!chatroom?.protocol?.hasLogin}>Earlier</button>
+				<button onClick={earlier} disabled={!chatroomRef.current?.protocol?.hasLogin}>Earlier</button>
 				<br />
 				{msgsView.length} msgs since {msgsView.length>0?(new Date(msgsView[0].time)).toLocaleString():null}
 				<div>
