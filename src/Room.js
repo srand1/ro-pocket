@@ -31,6 +31,7 @@ export const Room = props => {
 	const [msgsView, setMsgs] = useState([]);
 	const [roomId, setRoomId] = useState(() => props.roomId);
 	const [toggles, setToggles] = useState(() => new Map(toggleDescs.map(({key, init}) => [key, init])));
+	const bottomRef = useRef(null);
 
 	const debug = () => {
 		console.log(window.SDK);
@@ -167,6 +168,7 @@ export const Room = props => {
 				{stageView} | {chatroomRef.current?.protocol?.hasLogin?.toString()}
 				<button onClick={init} disabled={stageView === 'ONLINE'}>Init</button>
 				<button onClick={earlier} disabled={!chatroomRef.current?.protocol?.hasLogin}>Earlier</button>
+				<button onClick={() => bottomRef.current.scrollIntoView()}>Bottom</button>
 				<br />
 				{msgsView.length} msgs since {msgsView.length>0?(new Date(msgsView[0].time)).toLocaleString():null}
 				<div>
@@ -182,6 +184,7 @@ export const Room = props => {
 						<Msg msg={msg} deleted={deleted.has(msg.idClient)} toggles={toggles} />
 					</div>
 				))}
+				<div ref={bottomRef}>End of Msgs.</div>
 			</div>
 		</div>
 	);
