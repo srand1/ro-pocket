@@ -4,7 +4,7 @@ const base = 'https://source.48.cn/';
 const baseM = 'https://mp4.48.cn/';
 
 const Unknown = props => props.toggles.get('unknown') ? <div>Unknown {props.tag}: {JSON.stringify(props.msg)}</div> : null;
-const Ignore = props => props.toggles.get('ignore') ? <div>(Ignored {props.tag})</div> : null;
+const Ignore = props => props.toggles.get('ignore') ? <div>(Ignored {props.custom.messageType})</div> : null;
 
 const Template = props => (
 	<div className={props.deleted?'deleted':''}>
@@ -25,58 +25,9 @@ export const Msg = props => {
 	if (!props.toggles.get('showAll') && parseInt(custom.sessionRole) === 0) return null;
 	if (props.toggles.get(custom.messageType) === false) return null;
 
-	if (custom.messageType === 'TEXT') {
-		return <Text msg={props.msg} custom={custom} deleted={props.deleted} />;
-	}
-	if (custom.messageType === 'DELETE') {
-		return <Ignore tag={'adminServer DELETE'} toggles={props.toggles} />;
-	}
-	if (custom.messageType === 'DISABLE_SPEAK') {
-		return <Ignore tag={'adminServer DISABLE_SPEAK'} toggles={props.toggles} />;
-	}
-	if (custom.messageType === 'PRESENT_NORMAL') {
-		return <Ignore tag={'adminServer PRESENT_NORMAL'} toggles={props.toggles} />;
-	}
-	if (custom.messageType === 'PRESENT_FULLSCREEN') {
-		return <Ignore tag={'adminServer PRESENT_FULLSCREEN'} toggles={props.toggles} />;
-	}
-	if (custom.messageType === 'RECIEVE_GIFT_EVENT') {
-		return <Ignore tag={'adminServer RECIEVE_GIFT_EVENT'} toggles={props.toggles} />;
-	}
-	if (custom.messageType === 'SEND_GIFT_EVENT') {
-		return <Ignore tag={'adminServer SEND_GIFT_EVENT'} toggles={props.toggles} />;
-	}
-	if (custom.messageType === 'PRESENT_TEXT') {
-		return <PresentText msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'EXPRESSIMAGE') {
-		return <ExpressImage msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'REPLY') {
-		return <Reply msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'FLIPCARD') {
-		return <FlipCard msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'FLIPCARD_AUDIO') {
-		return <FlipCardAudio msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'IMAGE') {
-		return <Image msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'VIDEO') {
-		return <Video msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'AUDIO') {
-		return <Audio msg={props.msg} custom={custom} />;
-	}
-	if (custom.messageType === 'LIVEPUSH') {
-		return <LivePush msg={props.msg} custom={custom} />;
-	}
-	// GIFTREPLY FLIPCARD_VIDEO EXPRESS VOTE CLOSE_ROOM_CHAT
-	// SESSION_DIANTAI OPEN_LIVE TRIP_INFO
-	// ZHONGQIU_ACTIVITY_LANTERN_FANS
-	return <Unknown tag={'messageType'} msg={props.msg} toggles={props.toggles} />;
+	const Render = messageType2render.get(custom.messageType);
+	if (!Render) return <Unknown tag={'messageType'} msg={props.msg} toggles={props.toggles} />;
+	return <Render msg={props.msg} custom={custom} deleted={props.deleted} toggles={props.toggles} />;
 };
 
 const Text = props => {
@@ -157,3 +108,25 @@ const LivePush = props => {
 		</Template>
 	);
 };
+
+const messageType2render = new Map([
+	['TEXT', Text],
+	['DELETE', Ignore],
+	['DISABLE_SPEAK', Ignore],
+	['PRESENT_NORMAL', Ignore],
+	['PRESENT_FULLSCREEN', Ignore],
+	['RECIEVE_GIFT_EVENT', Ignore],
+	['SEND_GIFT_EVENT', Ignore],
+	['PRESENT_TEXT', PresentText],
+	['EXPRESSIMAGE', ExpressImage],
+	['REPLY', Reply],
+	['FLIPCARD', FlipCard],
+	['FLIPCARD_AUDIO', FlipCardAudio],
+	['IMAGE', Image],
+	['VIDEO', Video],
+	['AUDIO', Audio],
+	['LIVEPUSH', LivePush],
+	// GIFTREPLY FLIPCARD_VIDEO EXPRESS VOTE CLOSE_ROOM_CHAT
+	// SESSION_DIANTAI OPEN_LIVE TRIP_INFO
+	// ZHONGQIU_ACTIVITY_LANTERN_FANS
+]);
