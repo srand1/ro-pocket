@@ -179,6 +179,13 @@ const BarrageNormal = props => {
 		</Template>
 	);
 };
+const BarragePay = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			##<strong>{props.custom.giftInfo?.attachData?.text}</strong>
+		</Template>
+	);
+};
 const EventVipEnter = props => {
 	return (
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
@@ -207,6 +214,21 @@ const PresentFullScreen = props => {
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			Sent {props.custom.giftInfo?.giftNum}x {props.custom.giftInfo?.giftName}
 		</Template>
+	);
+};
+const KtvSingProgress = props => {
+	const fmtMs = ms => `${Math.floor(ms/60000)}:${Math.floor(ms%60000/1000)}.${ms%1000}`;
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			KTV ({fmtMs(props.custom.currentTime)} / {fmtMs(props.custom.totalTime)}): {props.custom.businessData.userInfo}
+		</Template>
+	);
+};
+const MemberStartSongBarrageNotify = props => {
+	return (
+		<div>
+			{props.custom.text}
+		</div>
 	);
 };
 
@@ -241,6 +263,12 @@ const messageType2render = new Map([
 	['LIVEUPDATE', LiveUpdate],
 	['CLOSELIVE', CloseLive],
 	['BARRAGE_NORMAL', BarrageNormal],
+	['BARRAGE_PAY', BarragePay],
 	['EVENT_VIP_ENTER', EventVipEnter],
 	['BARRAGE_NOTIFY', BarrageNotify],
+	['KTV_SING_Progress', KtvSingProgress],
+	['MEMBERSTARTSONG_BARRAGE_NOTIFY', MemberStartSongBarrageNotify],
+	['KTV_SONG_MSG', Ignore],
+	['KTV_SING_START', Ignore],
+	['KTV_SING_END', Ignore],
 ]);

@@ -25,6 +25,7 @@ const toggleDescs = [
 	{key: 'ignore', desc: '\u7CFB\u7EDF', init: false},
 	{key: 'unknown', desc: '\u672A\u77E5', init: true},
 	{key: 'LIVEUPDATE', desc: '\u76F4\u64AD\u4eba\u6c14', init: false},
+	{key: 'KTV_SING_Progress', desc: '\u6f14\u5531\u8fdb\u5ea6', init: false},
 ];
 
 const _p = (chatroom, method, opts) => new Promise((resolve, reject) => chatroom[method]({
