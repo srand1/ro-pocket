@@ -59,6 +59,14 @@ const Reply = props => {
 		</Template>
 	);
 };
+const GiftReply = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			{props.custom.text}
+			<blockquote>{props.custom.replyName}: {props.custom.replyText}</blockquote>
+		</Template>
+	);
+};
 const FlipCard = props => {
 	return (
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
@@ -75,7 +83,22 @@ const FlipCardAudio = props => {
 		</Template>
 	);
 };
+const FlipCardVideo = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<video className="msg-img" src={new URL(JSON.parse(props.custom.answer).url, baseM)} controls></video>
+			<blockquote>{props.custom.question}</blockquote>
+		</Template>
+	);
+};
 const Image = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<img className="msg-img" src={props.msg.file.url} alt="" />
+		</Template>
+	);
+};
+const Gif = props => {
 	return (
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			<img className="msg-img" src={props.msg.file.url} alt="" />
@@ -108,25 +131,59 @@ const LivePush = props => {
 		</Template>
 	);
 };
+const SharePosts = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<a
+				href={props.custom.playUrl}
+				target="_blank"
+				rel="noreferrer"
+			>{props.custom.shareTitle}</a><br />
+			{props.custom.shareDesc}
+		</Template>
+	);
+};
+const Vote = props => {
+	const url = new URL(props.custom.shortPath, 'http://example.com');
+	const postId = url.searchParams.get('id');
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<a
+				href={`https://h5.48.cn/2019appshare/dynamic/index.html?id=${postId}`}
+				target="_blank"
+				rel="noreferrer"
+			>{props.custom.text}</a><br />
+			{props.custom.content}
+		</Template>
+	);
+};
 
 const messageType2render = new Map([
 	['TEXT', Text],
 	['DELETE', Ignore],
 	['DISABLE_SPEAK', Ignore],
+	['CLOSE_ROOM_CHAT', Ignore],
+	['SESSION_DIANTAI', Ignore],
 	['PRESENT_NORMAL', Ignore],
 	['PRESENT_FULLSCREEN', Ignore],
 	['RECIEVE_GIFT_EVENT', Ignore],
 	['SEND_GIFT_EVENT', Ignore],
+	['SPRING_FESTIVAL_2022', Ignore],
 	['PRESENT_TEXT', PresentText],
 	['EXPRESSIMAGE', ExpressImage],
 	['REPLY', Reply],
+	['GIFTREPLY', GiftReply],
 	['FLIPCARD', FlipCard],
 	['FLIPCARD_AUDIO', FlipCardAudio],
+	['FLIPCARD_VIDEO', FlipCardVideo],
 	['IMAGE', Image],
+	['gif', Gif],
 	['VIDEO', Video],
 	['AUDIO', Audio],
 	['LIVEPUSH', LivePush],
-	// GIFTREPLY FLIPCARD_VIDEO EXPRESS VOTE CLOSE_ROOM_CHAT
-	// SESSION_DIANTAI OPEN_LIVE TRIP_INFO
+	['SHARE_POSTS', SharePosts],
+	['VOTE', Vote],
+	// EXPRESS
+	// OPEN_LIVE TRIP_INFO
 	// ZHONGQIU_ACTIVITY_LANTERN_FANS
 ]);
