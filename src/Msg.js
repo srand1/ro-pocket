@@ -30,13 +30,6 @@ export const Msg = props => {
 	return <Render msg={props.msg} custom={custom} deleted={props.deleted} toggles={props.toggles} />;
 };
 
-const Text = props => {
-	return (
-		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
-			{props.custom.text}
-		</Template>
-	);
-};
 const PresentText = props => {
 	return (
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
@@ -44,10 +37,10 @@ const PresentText = props => {
 		</Template>
 	);
 };
-const ExpressImage = props => {
+const Text = props => {
 	return (
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
-			<img src={new URL(props.custom.emotionRemote, base)} alt="" />
+			{props.custom.text}
 		</Template>
 	);
 };
@@ -64,6 +57,41 @@ const GiftReply = props => {
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			{props.custom.text}
 			<blockquote>{props.custom.replyName}: {props.custom.replyText}</blockquote>
+		</Template>
+	);
+};
+const ExpressImage = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<img src={new URL(props.custom.emotionRemote, base)} alt="" />
+		</Template>
+	);
+};
+const Image = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<img className="msg-img" src={props.msg.file.url} alt="" />
+		</Template>
+	);
+};
+const Gif = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<img className="msg-img" src={props.msg.file.url} alt="" />
+		</Template>
+	);
+};
+const Audio = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<audio src={props.msg.file.url} controls></audio>
+		</Template>
+	);
+};
+const Video = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			<video className="msg-img" src={props.msg.file.url} controls></video>
 		</Template>
 	);
 };
@@ -88,34 +116,6 @@ const FlipCardVideo = props => {
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			<video className="msg-img" src={new URL(JSON.parse(props.custom.answer).url, baseM)} controls></video>
 			<blockquote>{props.custom.question}</blockquote>
-		</Template>
-	);
-};
-const Image = props => {
-	return (
-		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
-			<img className="msg-img" src={props.msg.file.url} alt="" />
-		</Template>
-	);
-};
-const Gif = props => {
-	return (
-		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
-			<img className="msg-img" src={props.msg.file.url} alt="" />
-		</Template>
-	);
-};
-const Video = props => {
-	return (
-		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
-			<video className="msg-img" src={props.msg.file.url} controls></video>
-		</Template>
-	);
-};
-const Audio = props => {
-	return (
-		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
-			<audio src={props.msg.file.url} controls></audio>
 		</Template>
 	);
 };
@@ -159,7 +159,6 @@ const Vote = props => {
 };
 
 const messageType2render = new Map([
-	['TEXT', Text],
 	['DELETE', Ignore],
 	['DISABLE_SPEAK', Ignore],
 	['CLOSE_ROOM_CHAT', Ignore],
@@ -170,16 +169,17 @@ const messageType2render = new Map([
 	['SEND_GIFT_EVENT', Ignore],
 	['SPRING_FESTIVAL_2022', Ignore],
 	['PRESENT_TEXT', PresentText],
-	['EXPRESSIMAGE', ExpressImage],
+	['TEXT', Text],
 	['REPLY', Reply],
 	['GIFTREPLY', GiftReply],
+	['EXPRESSIMAGE', ExpressImage],
+	['IMAGE', Image],
+	['gif', Gif],
+	['AUDIO', Audio],
+	['VIDEO', Video],
 	['FLIPCARD', FlipCard],
 	['FLIPCARD_AUDIO', FlipCardAudio],
 	['FLIPCARD_VIDEO', FlipCardVideo],
-	['IMAGE', Image],
-	['gif', Gif],
-	['VIDEO', Video],
-	['AUDIO', Audio],
 	['LIVEPUSH', LivePush],
 	['SHARE_POSTS', SharePosts],
 	['VOTE', Vote],
