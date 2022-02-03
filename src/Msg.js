@@ -157,14 +157,66 @@ const Vote = props => {
 		</Template>
 	);
 };
+const LiveUpdate = props => {
+	return (
+		<div>
+			{`${props.custom.liveUpdateInfo.online} \u4eba`} &nbsp;
+			{`${props.custom.liveUpdateInfo.allMoney} \ud83c\udf57`}
+		</div>
+	);
+};
+const CloseLive = props => {
+	return (
+		<div>
+			Closed.
+		</div>
+	);
+};
+const BarrageNormal = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			{props.custom.text}
+		</Template>
+	);
+};
+const EventVipEnter = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			{props.custom.liveIntoPromptDescribe}
+		</Template>
+	);
+};
+const BarrageNotify = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			{props.custom.text}
+		</Template>
+	);
+};
+const PresentNormal = props => {
+	if (props.custom.module !== 'LIVE') return <Ignore {...props} />;
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			Sent {props.custom.giftInfo?.giftNum}x {props.custom.giftInfo?.giftName}
+		</Template>
+	);
+};
+const PresentFullScreen = props => {
+	if (props.custom.module !== 'LIVE') return <Ignore {...props} />;
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			Sent {props.custom.giftInfo?.giftNum}x {props.custom.giftInfo?.giftName}
+		</Template>
+	);
+};
 
 const messageType2render = new Map([
 	['DELETE', Ignore],
 	['DISABLE_SPEAK', Ignore],
 	['CLOSE_ROOM_CHAT', Ignore],
 	['SESSION_DIANTAI', Ignore],
-	['PRESENT_NORMAL', Ignore],
-	['PRESENT_FULLSCREEN', Ignore],
+	['PRESENT_NORMAL', PresentNormal],
+	['PRESENT_FULLSCREEN', PresentFullScreen],
 	['RECIEVE_GIFT_EVENT', Ignore],
 	['SEND_GIFT_EVENT', Ignore],
 	['SPRING_FESTIVAL_2022', Ignore],
@@ -186,4 +238,9 @@ const messageType2render = new Map([
 	// EXPRESS
 	// OPEN_LIVE TRIP_INFO
 	// ZHONGQIU_ACTIVITY_LANTERN_FANS
+	['LIVEUPDATE', LiveUpdate],
+	['CLOSELIVE', CloseLive],
+	['BARRAGE_NORMAL', BarrageNormal],
+	['EVENT_VIP_ENTER', EventVipEnter],
+	['BARRAGE_NOTIFY', BarrageNotify],
 ]);
