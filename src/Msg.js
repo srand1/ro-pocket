@@ -10,7 +10,7 @@ const Template = props => (
 	<div className={props.deleted?'deleted':''}>
 		<img className="avatar" src={new URL(props.user?.avatar, base)} alt="" />
 		{(props.user?.pfUrl)?(<img className="avatar-overlay" src={new URL(props.user?.pfUrl, base)} alt="" />):null}
-		{props.user?.nickName}
+		{props.user?.nickName || props.user?.nickname}
 		{(new Date(props.msg.time)).toLocaleString()}
 		<br />
 		{props.children}
@@ -139,7 +139,8 @@ const SharePosts = props => {
 				target="_blank"
 				rel="noreferrer"
 			>{props.custom.shareTitle}</a><br />
-			{props.custom.shareDesc}
+			{props.custom.shareDesc}<br />
+			{(props.custom.sharePic)?(<img className="msg-img" src={new URL(props.custom.sharePic, base)} alt="" />):null}
 		</Template>
 	);
 };
@@ -186,7 +187,49 @@ const BarragePay = props => {
 		</Template>
 	);
 };
+const BarrageStarTwo = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			#*<strong>{props.custom.giftInfo?.attachData?.text}</strong>
+		</Template>
+	);
+};
+const BarrageMember = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			**<strong>{props.custom.text}</strong>
+		</Template>
+	);
+};
+const BarrageSuperman = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			*#<strong>{props.custom.text}</strong>
+		</Template>
+	);
+};
+const LiveAnnounce = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			Announce: {props.custom.text}
+		</Template>
+	);
+};
 const EventVipEnter = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			{props.custom.liveIntoPromptDescribe}
+		</Template>
+	);
+};
+const EventHaveHeadEnter = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			{props.custom.liveIntoPromptDescribe}
+		</Template>
+	);
+};
+const EventNoHeadEnter = props => {
 	return (
 		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
 			{props.custom.liveIntoPromptDescribe}
@@ -216,6 +259,58 @@ const PresentFullScreen = props => {
 		</Template>
 	);
 };
+const PresentEmotion = props => {
+	if (props.custom.module !== 'LIVE') return <Ignore {...props} />;
+	return (
+		<Template msg={props.msg} user={props.custom.user} deleted={props.deleted}>
+			Sent {props.custom.giftInfo?.giftNum}x {props.custom.giftInfo?.giftName}
+			<br /><img src={new URL(props.custom.giftInfo?.picPath, base)} alt="" />
+		</Template>
+	);
+};
+const MicrophoneConnectionStart = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.initiator} deleted={props.deleted}>
+			Dual Request Started
+		</Template>
+	);
+};
+const MicrophoneConnectionCancel = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.initiator} deleted={props.deleted}>
+			Dual Request Cancelled
+		</Template>
+	);
+};
+const MicrophoneConnectionAgree = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.invitee} deleted={props.deleted}>
+			Dual Request Agreed
+		</Template>
+	);
+};
+const MicrophoneConnectionRefuse = props => {
+	return (
+		<Template msg={props.msg} user={props.custom.invitee} deleted={props.deleted}>
+			Dual Request Refused
+		</Template>
+	);
+};
+const InformBothStarInfo = props => {
+	return (
+		<div>
+			Dual Started: {props.custom.initiator.nickname} -> {props.custom.invitee.nickname}
+		</div>
+	);
+};
+const MicrophoneConnectionFinish = props => {
+	const terminator = [props.custom.initiator, props.custom.invitee].filter(u => u.userId === props.custom.terminator)[0];
+	return (
+		<Template msg={props.msg} user={terminator} deleted={props.deleted}>
+			Dual Finished: {props.custom.initiator.nickname} -> {props.custom.invitee.nickname}
+		</Template>
+	);
+};
 const KtvSingProgress = props => {
 	const fmtMs = ms => `${Math.floor(ms/60000)}:${Math.floor(ms%60000/1000)}.${ms%1000}`;
 	return (
@@ -239,8 +334,7 @@ const messageType2render = new Map([
 	['SESSION_DIANTAI', Ignore],
 	['PRESENT_NORMAL', PresentNormal],
 	['PRESENT_FULLSCREEN', PresentFullScreen],
-	['RECIEVE_GIFT_EVENT', Ignore],
-	['SEND_GIFT_EVENT', Ignore],
+	['PRESENT_EMOTION', PresentEmotion],
 	['SPRING_FESTIVAL_2022', Ignore],
 	['PRESENT_TEXT', PresentText],
 	['TEXT', Text],
@@ -256,19 +350,37 @@ const messageType2render = new Map([
 	['FLIPCARD_VIDEO', FlipCardVideo],
 	['LIVEPUSH', LivePush],
 	['SHARE_POSTS', SharePosts],
+	['SHARE_LIVE', SharePosts],
+	['SHARE_MUSIC', SharePosts],
+	['SHARE_VIDEO', SharePosts],
 	['VOTE', Vote],
-	// EXPRESS
-	// OPEN_LIVE TRIP_INFO
-	// ZHONGQIU_ACTIVITY_LANTERN_FANS
+	// Live
 	['LIVEUPDATE', LiveUpdate],
 	['CLOSELIVE', CloseLive],
+	// Live-msg
 	['BARRAGE_NORMAL', BarrageNormal],
 	['BARRAGE_PAY', BarragePay],
+	['BARRAGE_STARTWO', BarrageStarTwo],
+	['BARRAGE_MEMBER', BarrageMember],
+	['BARRAGE_SUPERMAN', BarrageSuperman],
+	['LIVE_ANNOUNCE', LiveAnnounce],
 	['EVENT_VIP_ENTER', EventVipEnter],
+	['EVENT_HAVEHEAD_ENTER', EventHaveHeadEnter],
+	['EVENT_NOHEAD_ENTER', EventNoHeadEnter],
 	['BARRAGE_NOTIFY', BarrageNotify],
+	// Live-dual
+	['MICROPHONE_CONNECTION_START', MicrophoneConnectionStart],   // invitee
+	['MICROPHONE_CONNECTION_CANCEL', MicrophoneConnectionCancel], // invitee
+	['MICROPHONE_CONNECTION_AGREE', MicrophoneConnectionAgree],   // initiator
+	['MICROPHONE_CONNECTION_REFUSE', MicrophoneConnectionRefuse], // initiator
+	['INFORM_BOTH_STAR_INFO', InformBothStarInfo],                // both
+	['MICROPHONE_CONNECTION_FINISH', MicrophoneConnectionFinish], // both
+	// Live-ktv
 	['KTV_SING_Progress', KtvSingProgress],
 	['MEMBERSTARTSONG_BARRAGE_NOTIFY', MemberStartSongBarrageNotify],
 	['KTV_SONG_MSG', Ignore],
 	['KTV_SING_START', Ignore],
 	['KTV_SING_END', Ignore],
+	['KTV_SONG_SUSPEND', Ignore],
+	['KTV_SONG_CONTINUE', Ignore],
 ]);
