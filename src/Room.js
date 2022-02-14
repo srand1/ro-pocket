@@ -41,6 +41,14 @@ export const Room = props => {
 	const [nMembers, setNMembers] = useState(null);
 	const bottomRef = useRef(null);
 
+	const reset = () => {
+		chatroomRef.current?.destroy();
+		chatroomRef.current = null;
+		setStage('OFFLINE');
+		setMsgs([]);
+		setNMembers(null);
+	};
+
 	const debug = () => {
 		console.log(window.SDK);
 		console.log(chatroomRef.current);
@@ -198,6 +206,7 @@ export const Room = props => {
 				{roomId}
 				<br />
 				{stageView} | {chatroomRef.current?.protocol?.hasLogin?.toString()}
+				<button onClick={reset}>Reset</button>
 				<button onClick={init} disabled={stageView === 'ONLINE'}>Init</button>
 				<button onClick={earlier} disabled={!chatroomRef.current?.protocol?.hasLogin}>Earlier</button>
 				<button onClick={() => bottomRef.current.scrollIntoView()}>Bottom</button>
