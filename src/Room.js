@@ -38,6 +38,7 @@ export const Room = props => {
 	const [msgsView, setMsgs] = useState([]);
 	const [roomId, setRoomId] = useState(() => props.roomId);
 	const [toggles, setToggles] = useState(() => new Map(toggleDescs.map(({key, init}) => [key, init])));
+	const [nMembers, setNMembers] = useState(null);
 	const bottomRef = useRef(null);
 
 	const debug = () => {
@@ -163,6 +164,30 @@ export const Room = props => {
 		msg => msg.custom?.messageType === 'DELETE'
 	).map(msg => msg.custom.targetId));
 
+	// Actually `renderedNMembers` directly also works.
+	const renderNMembers = nMembers => {
+		if (!nMembers) return null;
+		const { n, t0 } = nMembers;
+		return `${n} (${t0.getHours()}:${t0.getMinutes()})`;
+	};
+	const refresh = async () => {
+		const t0 = new Date();
+		let n = 0;
+		let time = undefined;
+		try {
+			while (true) {
+				const { members } = await _p(chatroomRef.current, 'getChatroomMembers', {guest: true, time});
+				n += members.length;
+				if (members.length < 100) break;
+				time = members[members.length-1].enterTime;
+			}
+		} catch (err) {
+			console.log('refresh', err);
+		}
+		const t1 = new Date();
+		setNMembers({n, t0, t1});
+	};
+
 	return (
 		<div className="Room">
 			<header>
@@ -176,6 +201,8 @@ export const Room = props => {
 				<button onClick={init} disabled={stageView === 'ONLINE'}>Init</button>
 				<button onClick={earlier} disabled={!chatroomRef.current?.protocol?.hasLogin}>Earlier</button>
 				<button onClick={() => bottomRef.current.scrollIntoView()}>Bottom</button>
+				{renderNMembers(nMembers)}
+				<button onClick={refresh} disabled={!chatroomRef.current?.protocol?.hasLogin}>{'\u5237\u65b0\u4eba\u6570'}</button>
 				<br />
 				{msgsView.length} msgs since {msgsView.length>0?(new Date(msgsView[0].time)).toLocaleString():null}
 				<div>
