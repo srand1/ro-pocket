@@ -383,4 +383,6 @@ const messageType2render = new Map([
 	['KTV_SING_END', Ignore],
 	['KTV_SONG_SUSPEND', Ignore],
 	['KTV_SONG_CONTINUE', Ignore],
+	// OpenLive
+	['EVENT_DYNAMIC_ACTIVITY', Ignore],
 ]);
