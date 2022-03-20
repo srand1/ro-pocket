@@ -326,6 +326,37 @@ const MemberStartSongBarrageNotify = props => {
 		</div>
 	);
 };
+const FaceSession = props => {
+	return (
+		<div>
+			{(new Date(props.msg.time)).toLocaleString()}
+			<br />
+			{props.custom.starUser.nickname} ({props.custom.queueSize} / {props.custom.queueTime}):
+			{props.custom.currentNickname} ({props.custom.currentCode})
+			->
+			{props.custom.nextNickname} ({props.custom.nextCode})
+		</div>
+	);
+};
+const NetFaceNext = props => {
+	return (
+		<div>
+			{(new Date(props.msg.time)).toLocaleString()}
+			<br />
+			{props.custom.starUser.nickname}:
+			NEXT {props.custom.userId}
+		</div>
+	);
+};
+const NetFaceEnd = props => {
+	return (
+		<div>
+			{(new Date(props.msg.time)).toLocaleString()}
+			<br />
+			END {props.custom.targetId}
+		</div>
+	);
+};
 
 const messageType2render = new Map([
 	['DELETE', Ignore],
@@ -385,4 +416,8 @@ const messageType2render = new Map([
 	['KTV_SONG_CONTINUE', Ignore],
 	// OpenLive
 	['EVENT_DYNAMIC_ACTIVITY', Ignore],
+	// NetFace
+	['FACESESSION', FaceSession],
+	['NETFACE_NEXT_FANS', NetFaceNext],
+	['NETFACE_END', NetFaceEnd],
 ]);
