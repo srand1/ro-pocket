@@ -365,6 +365,7 @@ const messageType2render = new Map([
 	['SESSION_DIANTAI', Ignore],
 	['PRESENT_NORMAL', PresentNormal],
 	['PRESENT_FULLSCREEN', PresentFullScreen],
+	['PRESENT_FULLSCREEN_TWO', PresentFullScreen],
 	['PRESENT_EMOTION', PresentEmotion],
 	['SPRING_FESTIVAL_2022', Ignore],
 	['PRESENT_TEXT', PresentText],
