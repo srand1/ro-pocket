@@ -343,7 +343,7 @@ const NetFaceNext = props => {
 		<div>
 			{(new Date(props.msg.time)).toLocaleString()}
 			<br />
-			{props.custom.starUser.nickname}:
+			{props.custom.starUser?.nickname}:
 			NEXT {props.custom.userId}
 		</div>
 	);
