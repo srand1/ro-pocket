@@ -207,7 +207,7 @@ export const Room = props => {
 				<Selector onChange={setRoomId} />
 				{roomId}
 				<br />
-				<QchatCtrl onChange={setQchatServerId} />
+				<QchatCtrl qchatServerId={qchatServerId} onChange={setQchatServerId} onChannelChange={z => console.log(z)} />
 				{qchatServerId}
 				<br />
 				{stageView} | {chatroomRef.current?.protocol?.hasLogin?.toString()}

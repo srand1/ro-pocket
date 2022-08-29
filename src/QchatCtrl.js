@@ -11,6 +11,7 @@ export const QchatCtrl = props => {
 	const [stageView, setStage] = useState('OFFLINE');
 	const [accid, setAccid] = useState('');
 	const [pwd, setPwd] = useState('');
+	const [channels, setChannels] = useState([]);
 	const saveCreds = () => {
 		window.localStorage.setItem('accid', accid);
 		window.localStorage.setItem('pwd', pwd);
@@ -32,6 +33,19 @@ export const QchatCtrl = props => {
 		});
 		qchat.login();
 	};
+	const joinServer = () => {
+		qchatRef.current.qchatServer.applyServerJoin({
+			serverId: props.qchatServerId,
+		});
+	};
+	const loadChannels = async () => {
+		const channels = await qchatRef.current.qchatChannel.getChannelsByPage({
+			serverId: props.qchatServerId,
+			timetag: 0,
+		});
+		console.log(channels);
+		setChannels(channels.datas);
+	};
 	return (
 		<>
 			<button onClick={saveCreds}>S</button>
@@ -48,6 +62,15 @@ export const QchatCtrl = props => {
 			}} />
 			<datalist id="qchat-server">
 			{qchatServerList.map(({name, abbr, qchatServerId}) => <option key={qchatServerId} label={abbr}>{name}</option>)}
+			</datalist>
+			<button onClick={loadChannels} disabled={stageView !== 'ONLINE'}>-&gt;</button>
+			<input list="qchat-channel" onChange={evt => {
+				const v = evt.target.value;
+				const qchatChannelId = v;
+				props.onChannelChange(qchatChannelId);
+			}} />
+			<datalist id="qchat-channel">
+			{channels.map(({name, channelId}) => <option key={channelId} label={name}>{channelId}</option>)}
 			</datalist>
 		</>
 	);
