@@ -1,6 +1,7 @@
 import { useRef, useState, Fragment } from 'react';
 import { Msg } from './Msg';
 import { Selector } from './Selector';
+import { QchatCtrl } from './QchatCtrl';
 
 const appKey = '632feff1f4c838541ab75195d1ceb3fa';
 const chatroomAddresses = ['chatweblink01.netease.im:443'];
@@ -37,6 +38,7 @@ export const Room = props => {
 	const [stageView, setStage] = useState('OFFLINE');
 	const [msgsView, setMsgs] = useState([]);
 	const [roomId, setRoomId] = useState(() => props.roomId);
+	const [qchatServerId, setQchatServerId] = useState(() => props.qchatServerId);
 	const [toggles, setToggles] = useState(() => new Map(toggleDescs.map(({key, init}) => [key, init])));
 	const [nMembers, setNMembers] = useState(null);
 	const bottomRef = useRef(null);
@@ -204,6 +206,9 @@ export const Room = props => {
 				<br />
 				<Selector onChange={setRoomId} />
 				{roomId}
+				<br />
+				<QchatCtrl onChange={setQchatServerId} />
+				{qchatServerId}
 				<br />
 				{stageView} | {chatroomRef.current?.protocol?.hasLogin?.toString()}
 				<button onClick={reset}>Reset</button>
