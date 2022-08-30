@@ -48,7 +48,7 @@ export const QchatCtrl = props => {
 		setChannels(channels.datas);
 	};
 	return (
-		<>
+		<fieldset>
 			<button onClick={saveCreds}>S</button>
 			<input onChange={evt => setAccid(evt.target.value)} value={accid} />
 			<input onChange={evt => setPwd(evt.target.value)} value={pwd} />
@@ -75,6 +75,6 @@ export const QchatCtrl = props => {
 			}}>
 				{channels.map(({name, channelId}) => <option key={channelId} value={channelId}>{name}</option>)}
 			</select>
-		</>
+		</fieldset>
 	);
 };

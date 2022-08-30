@@ -204,11 +204,11 @@ export const Room = props => {
 				<button onClick={debug}>Debug</button>
 				<input type="file" onChange={fileSelected} />
 				<br />
-				<Selector onChange={setRoomId} />
-				{roomId}
-				<br />
 				<QchatCtrl qchatServerId={qchatServerId} onChange={setQchatServerId} onChannelChange={z => console.log(z)} />
 				{qchatServerId}
+				<br />
+				<Selector onChange={setRoomId} />
+				{roomId}
 				<br />
 				{stageView} | {chatroomRef.current?.protocol?.hasLogin?.toString()}
 				<button onClick={reset}>Reset</button>
