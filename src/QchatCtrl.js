@@ -36,6 +36,7 @@ export const QchatCtrl = props => {
 	const joinServer = () => {
 		qchatRef.current.qchatServer.applyServerJoin({
 			serverId: props.qchatServerId,
+			ps: '',
 		});
 	};
 	const loadChannels = async () => {
@@ -59,19 +60,21 @@ export const QchatCtrl = props => {
 				const v = evt.target.value;
 				const qchatServerId = byName.get(v) || v;
 				props.onChange(qchatServerId);
+				setChannels([]);
 			}} />
 			<datalist id="qchat-server">
 			{qchatServerList.map(({name, abbr, qchatServerId}) => <option key={qchatServerId} label={abbr}>{name}</option>)}
 			</datalist>
+			<button onClick={joinServer} disabled={stageView !== 'ONLINE'}>J</button>
 			<button onClick={loadChannels} disabled={stageView !== 'ONLINE'}>-&gt;</button>
-			<input list="qchat-channel" onChange={evt => {
+			{channels.length}x
+			<select onChange={evt => {
 				const v = evt.target.value;
 				const qchatChannelId = v;
 				props.onChannelChange(qchatChannelId);
-			}} />
-			<datalist id="qchat-channel">
-			{channels.map(({name, channelId}) => <option key={channelId} label={name}>{channelId}</option>)}
-			</datalist>
+			}}>
+				{channels.map(({name, channelId}) => <option key={channelId} value={channelId}>{name}</option>)}
+			</select>
 		</>
 	);
 };
