@@ -47,6 +47,13 @@ export const QchatCtrl = props => {
 		console.log(channels);
 		setChannels(channels.datas);
 	};
+	const hist = async () => {
+		const msgs = await qchatRef.current.qchatMsg.getHistoryMessage({
+			serverId: props.qchatServerId,
+			channelId: props.qchatChannelId,
+		});
+		props.onMsgs(msgs);
+	};
 	return (
 		<fieldset>
 			<button onClick={saveCreds}>S</button>
@@ -75,6 +82,7 @@ export const QchatCtrl = props => {
 			}}>
 				{channels.map(({name, channelId}) => <option key={channelId} value={channelId}>{name}</option>)}
 			</select>
+			<button onClick={hist}>Earlier</button>
 		</fieldset>
 	);
 };

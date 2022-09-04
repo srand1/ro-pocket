@@ -39,6 +39,7 @@ export const Room = props => {
 	const [msgsView, setMsgs] = useState([]);
 	const [roomId, setRoomId] = useState(() => props.roomId);
 	const [qchatServerId, setQchatServerId] = useState(() => props.qchatServerId);
+	const [qchatChannelId, setQchatChannelId] = useState(() => props.qchatChannelId);
 	const [toggles, setToggles] = useState(() => new Map(toggleDescs.map(({key, init}) => [key, init])));
 	const [nMembers, setNMembers] = useState(null);
 	const bottomRef = useRef(null);
@@ -204,8 +205,8 @@ export const Room = props => {
 				<button onClick={debug}>Debug</button>
 				<input type="file" onChange={fileSelected} />
 				<br />
-				<QchatCtrl qchatServerId={qchatServerId} onChange={setQchatServerId} onChannelChange={z => console.log(z)} />
-				{qchatServerId}
+				<QchatCtrl qchatServerId={qchatServerId} qchatChannelId={qchatChannelId} onChange={setQchatServerId} onChannelChange={setQchatChannelId} onMsgs={setMsgs} />
+				{qchatServerId}|{qchatChannelId}
 				<br />
 				<Selector onChange={setRoomId} />
 				{roomId}

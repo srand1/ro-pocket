@@ -20,7 +20,7 @@ const Template = props => (
 export const Msg = props => {
 	const custom = props.msg.custom;
 
-	if (!custom) return <Ignore tag={'no custom'} toggles={props.toggles} />;
+	if (!custom) return <Unknown tag={'no custom'} msg={props.msg} toggles={props.toggles} />;
 
 	if (!props.toggles.get('showAll') && parseInt(custom.sessionRole) === 0) return null;
 	if (props.toggles.get(custom.messageType) === false) return null;
