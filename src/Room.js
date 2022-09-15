@@ -32,6 +32,7 @@ const toggleDescs = [
 const _p = (chatroom, method, opts) => new Promise((resolve, reject) => chatroom[method]({
 	...opts, done: (err, obj) => err ? reject(err) : resolve(obj),
 }));
+const json2url = json => URL.createObjectURL(new Blob([JSON.stringify(json)]));
 
 export const Room = props => {
 	const chatroomRef = useRef(null);
@@ -170,6 +171,13 @@ export const Room = props => {
 		console.log('rendering', new Date());
 		setMsgs(msgsSanitized);
 	};
+	const dump = () => {
+		const a = document.createElement('a');
+		a.href = json2url(msgsView);
+		a.download = `${roomId}.json`;
+		// a.click();
+		a.dispatchEvent(new MouseEvent('click'));
+	};
 
 	const deleted = new Set(msgsView.filter(
 		msg => msg.custom?.messageType === 'DELETE'
@@ -204,6 +212,7 @@ export const Room = props => {
 			<header>
 				<button onClick={debug}>Debug</button>
 				<input type="file" onChange={fileSelected} />
+				<button onClick={dump}>Dump</button>
 				<br />
 				<QchatCtrl qchatServerId={qchatServerId} qchatChannelId={qchatChannelId} onChange={setQchatServerId} onChannelChange={setQchatChannelId} onMsgs={setMsgs} />
 				{qchatServerId}|{qchatChannelId}
